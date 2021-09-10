@@ -1,0 +1,171 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+
+
+
+\newcommand{\trnsp}{\mathsf{T}}
+\usepackage[round]{natbib}
+\renewcommand{\bibname}{References}
+\bibliographystyle{abbrvnat}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, citecolor=magenta}
+
+
+\makeatletter
+\@addtoreset{exercise}{section}
+\makeatother  
+\newcounter{exercise}
+\newtheorem{exercise}{Exercise}
+\renewcommand{\theexercise}{\arabic{exercise}}
+\newsavebox{\mybox}
+\newenvironment{note}
+{
+\begin{center}
+\begin{lrbox}{\mybox}
+\begin{minipage}{42em}}
+{\end{minipage}
+\end{lrbox}\fbox{\usebox{\mybox}}
+\end{center}}
+
+
+\title{Seminars on Overparametrized Machine Learning: \\Hand-in assignment 1}
+\author{Antônio H. Ribeiro, Dave Zachariah, Per Mattsson}
+
+\begin{document}
+
+\maketitle
+\begin{center}
+	\large \textbf{Due: 30th  of September 2021, 23:59}
+\end{center}
+
+\textit{
+The items in the assignment can be implemented in the programming language of choice.
+Nonetheless, we recommend the usage of Python as a programming language, since we might include suggestions of functions and code snippets in the exercise description.}
+
+
+
+\section*{Double-descent in random Feature regression}
+
+
+Follow the instructions to reproduce the double-descent behaviour in a regression problem. The setup resembles that used in Figure 2 in~\citep{belkin_reconciling_2019}: you will use random Fourier features and the minimum-norm solution. For simplicity, however, it will be used a smaller dataset and one that deals with regression (rather than classification).
+
+\paragraph{Dataset.} You will use the Boston house price dataset. The dataset is available in:\\
+    \href{https://archive.ics.uci.edu/ml/machine-learning-databases/housing/}{https://archive.ics.uci.edu/ml/machine-learning-databases/housing/}. 
+    
+    \begin{note}
+    \textbf{Note:} If you are using Python, scikit-learn library does have a function for loading the dataset, see \href{https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_boston.html}{sklearn.datasets.load\_boston}.
+    \end{note}
+    
+    Divide the dataset into 60\% / 40\% splits. Using the 60\% split for training and the 40\% split for testing the model.
+    
+\paragraph{Model.} Consider a linear-in-the-parameter model for predicting the output from the input:
+    \begin{equation}
+        \label{eq:nonlin-map}
+        \hat{y}_j = f(x_j) = \sum_{i=1}^m \theta_i \phi_i(x_j). 
+    \end{equation}
+    where $\phi_i$, $i=1, \cdots, m$ are nonlinear transformations that map the input to  the feature space. As in~\citet{belkin_reconciling_2019} Figure 2, you will use random Fourier features (see a more detailed description next).
+    
+    
+    Given the training dataset $\{(x_j, y_j), j=1, \cdots, n\}$, the model is estimated by finding the values $\theta_i$ that minimize
+    \begin{equation}
+        \label{eq:estimation}
+        \frac{1}{T}\sum_{t = 1}^T\left( y_t - \sum_{i=1}^m \theta_i \phi_i(x_j)\right)^2.
+    \end{equation}
+    Or, equivalently, in matrix form, by finding the vector $\theta \in \mathbb{R}^m$ that minimizes
+    \begin{equation}
+         \label{eq:estimation-matrix}
+        \frac{1}{T}\|y - \Phi \theta\|^2,  
+    \end{equation}
+    where $\Phi \in\mathbb{R}^{n\times m}$ is the matrix containing  $\phi_j(x_i)$ at position $(i, j)$ and $y \in \mathbb{R}^T$ is the vector of outputs. Indeed, finding  the  optimal  parameter  here  is  an  ordinary  least-squares problem and its analytical solution is
+    \begin{equation}
+    \label{eq:ls-sol}
+    \hat{\theta} = (\Phi^\trnsp \Phi)^{+}\Phi^\trnsp y,
+    \end{equation}
+
+    In the overparametrized regime, there are multiple solutions, and it is possible to prove that, in this case,  using the above solution yields the minimum $\ell_2$-norm solution to the problem (as used by \citet{belkin_reconciling_2019}), i.e.:
+    \begin{equation}
+    \label{eq:min-norm-solution}
+    \hat{\theta} = \text{arg}\min_\theta \|\theta\|_2 \quad \text{subject to}\quad\Phi\theta = y,
+    \end{equation}
+    where $(\Phi^\trnsp \Phi)^{+}$ denotes the Moore-Penrose pseudo-inverse of $\Phi^\trnsp \Phi$.  
+    
+    \begin{note}
+    \textbf{Note:} \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html}{scipy.linalg.lstsq} does yield the desired behaviour both in the underparametrized and overparametrized region.
+    \end{note}
+    
+    
+    \paragraph{Random Fourier features} Use the feature map introduced by 
+    \citet{rahimi_random_2008} to approximate the reproducing kernel Hilbert space (RKHS) defined by the Gaussian kernel ${K(x, x') = \exp(-\gamma \|x - x'\|^2)}$. More precisely, the features are generated as
+    \begin{equation}
+        \phi_i(x) = \sqrt{\frac{2}{m}}\cos(w_i^\trnsp x + b_i),
+    \end{equation}
+    where $w_i\in\mathbb{R}^n$ is a vector with each element sampled independently from $\mathcal{N}(0, 2\gamma)$ and $b_i\in\mathbb{R}$ is sampled from a uniform distribution $\mathcal{U}[0, 2\pi)$. 
+    
+    \begin{note}
+    \textbf{Note:} There is a implementation of random Fourier features in scikit-learn that you can use:
+    \href{https://scikit-learn.org/stable/modules/generated/sklearn.kernel_approximation.RBFSampler.html}{sklearn.kernel\_approximation.RBFSampler}.
+    \end{note}
+    
+    \begin{note}
+    You might notice that the formulation above is slightly different than the one presented in~\citet{belkin_reconciling_2019} for RFF. They are equivalent tough, and the one above has the advantage of do not be expressed using complex numbers.
+    \end{note}
+    
+
+    
+
+\section*{Exercise}
+
+Let $n$ be the number of training points, solve the above problem for $m$ ranging from $0.1n$ to $10 n$ (generate at least 100 configurations in this range using logspace). Plot as a function of the number of features $m$:
+\begin{enumerate}
+    \item \textbf{Train} mean square error; 
+    \item \textbf{Test} mean square error;
+    \item  The \textbf{parameter $\ell_2$ norm} $\|\theta\|_2$.
+\end{enumerate}
+
+   \begin{note}
+    Some tips for the plots to look nice:
+    \begin{itemize}
+        \item Close to the interpolation point the test error takes very
+        large values. We suggest to manually set the y-limits in the plot, so the region of interest is highlighted. The same also applies to the parameter norm.
+        \item Using logscale in the x-axis might also make the plot more clear.
+        \item Maybe add a vertical line in the threshold $m=n$ to show where the interpolation threshold is.
+    \end{itemize}
+    \end{note}
+
+\section*{The Submission}
+Your submission should have a single page of content (a4paper, fontsize=10pt, margin=2cm, both single and double column are acceptable...).  Include your name, the plots, a short description of experiment parameters that you used (i.e., which $\gamma$) and a paragraph of discussion/conclusion. You can assume that whoever will read your report has both read paper from~\citep{belkin_reconciling_2019} and the entire description above, so there is no need for repeating it... 
+
+All requested plots should have proper figure captions, legends, and axis labels. You should submit two files, one pdf-file with the report and a standalone script (or jupyter notebook) that can be used to run the code and generate the plots (Write as comments  the packages/libraries versions and additinal requirements as comments in the top of the script).
+
+\begin{thebibliography}{2}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Belkin et~al.(2019)Belkin, Hsu, Ma, and
+  Mandal]{belkin_reconciling_2019}
+M.~Belkin, D.~Hsu, S.~Ma, and S.~Mandal.
+\newblock Reconciling modern machine-learning practice and the classical
+  bias\textendash variance trade-off.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 116\penalty0
+  (32):\penalty0 15849--15854, Aug. 2019.
+\newblock ISSN 0027-8424, 1091-6490.
+\newblock \doi{10.1073/pnas.1903070116}.
+
+\bibitem[Rahimi and Recht(2008)]{rahimi_random_2008}
+A.~Rahimi and B.~Recht.
+\newblock Random {{Features}} for {{Large}}-{{Scale Kernel Machines}}.
+\newblock In \emph{Advances in {{Neural Information Processing Systems}} 20},
+  pages 1177--1184. 2008.
+
+\end{thebibliography}
+
+\end{document}
