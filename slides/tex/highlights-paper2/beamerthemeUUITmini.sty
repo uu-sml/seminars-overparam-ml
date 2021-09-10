@@ -1,0 +1,249 @@
+%% ===================================================================
+%% Minimalistic UU IT department beamer theme. Makes use of the colors
+%% from the IT department webpage.
+%%
+%% The code in the style file has been simplified to make it easy to 
+%% understand and modify; however, this comes at some cost in 
+%% flexibility and robustness.
+%%
+%% Marcus Björk, Systems and Control, November 28, 2016
+%% ===================================================================
+
+\ProvidesPackage{beamerthemeUUITmini}
+
+\usepackage{ifpdf}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{mdframed} %To make colored highlight boxes (different from blocks)
+%\usepackage{lmodern}
+\usepackage{newtxtext}
+
+
+\newtheorem{algorithmblock}[theorem]{Algorithm}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{prop}{Proposition}
+\newcommand{\email}[1]{\def\@email{#1}}
+\email{}
+\newcommand{\leftHead}[1]{\def\@leftHead{#1}}
+\leftHead{}
+\newcommand{\rightHead}[1]{\def\@rightHead{#1}}
+\rightHead{}
+\newcommand{\leftFoot}[1]{\def\@leftFoot{#1}}
+\leftFoot{}
+\newcommand{\rightFoot}[1]{\def\@rightFoot{#1}}
+\rightFoot{}
+\newcommand*{\insertemail}{\href{mailto:\@email}{\nolinkurl{\@email}}}
+\newcommand{\displayTitleLogo}[1]{\def\@showLogo{#1}}
+\displayTitleLogo{1}
+
+%To enable coloring of math with correct spacing
+\newcommand*{\mathcolor}{}
+\def\mathcolor#1#{\mathcoloraux{#1}}
+\newcommand*{\mathcoloraux}[3]{%
+	\protect\leavevmode
+	\begingroup
+	\color#1{#2}#3%
+	\endgroup
+}
+
+%\newenvironment{redbox}
+%{\begin{mdframed}[linewidth=1.5,linecolor=UURed,backgroundcolor=UURed!10]}
+%{\end{mdframed}\ignorespacesafterend}
+
+
+%% Disable navigation symbols
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption label separator}{: } %Fix for figure captions (no "Figure : bla bla")
+
+%% -------------------------------------------------------------------
+%% Themes
+\setbeamertemplate{blocks}[default]
+\useoutertheme[width=1cm,left]{sidebar}
+
+%% -------------------------------------------------------------------
+%% Fonts
+
+%\usefonttheme{uu}
+%Use serif on math (like in article mode)
+\usefonttheme{professionalfonts} %Suppress auto-manipulations of the math font made by Beamer
+\usefonttheme[onlymath]{serif} %Make sure only math is serif (seems to fail for some)
+
+\setbeamerfont{title}{size=\LARGE,parent=structure,series=\bfseries}
+\setbeamerfont{subtitle}{size=\normalsize,parent=title}
+
+\setbeamerfont{author in head/foot}{size=\tiny}
+\setbeamerfont{institute in head/foot}{size=\tiny}
+\setbeamerfont{date in head/foot}{series=\bfseries}
+\setbeamerfont{email in head/foot}{series=\bfseries}
+
+\setbeamerfont{frametitle}{parent=structure,size=\Large,series=\bfseries}
+\setbeamerfont{framesubtitle}{parent=frametitle,size=\footnotesize}
+
+
+\setbeamerfont{section in toc}{parent=structure,series=\bfseries}
+\setbeamerfont{section in sidebar}{parent=structure,series=\bfseries}
+
+\setbeamerfont{subtitle in head/foot}{size=\tiny}
+
+ \setbeamerfont{section in head/foot}{size=\tiny}
+ \setbeamerfont{subsection in head/foot}{size=\tiny}
+
+%% -------------------------------------------------------------------
+%% Colors
+
+%\usecolortheme{uu}
+%\usecolortheme{whale}
+
+%Color and shape of bullets in bullet lists
+\usecolortheme[RGB={191,45,56}]{structure}
+\setbeamertemplate{itemize item}[triangle]
+\setbeamertemplate{itemize subitem}[triangle] 
+\setbeamertemplate{itemize subsubitem}[triangle]
+
+%Define colors
+\definecolor{UURed}{RGB}{191,45,56}
+\definecolor{UUDarkGrey}{RGB}{51,51,51}
+\definecolor{UUGrey}{RGB}{85,85,85}
+\definecolor{UULightGrey}{RGB}{221,221,221}
+\definecolor{UUVeryLightGrey}{RGB}{235,235,235}
+
+%Title colors
+\setbeamercolor*{title}{fg=UURed,bg=white}
+\setbeamercolor*{titlelike}{fg=UURed,bg=white}
+\setbeamercolor*{titlebar}{bg=UULightGrey}
+%\setbeamercolor*{frametitle}{bg=lightgrey}
+
+%Header/footer colors
+\setbeamercolor*{title in head/foot}{bg=white,fg=UUDarkGrey}
+\setbeamercolor*{section in head/foot}{bg=white,fg=UUDarkGrey}
+\setbeamercolor*{subsection in head/foot}{bg=white,fg=UUDarkGrey}
+\setbeamercolor{date in head/foot}{bg=white,fg=black}
+\setbeamercolor{page number in foot}{bg=UULightGrey,fg=UUDarkGrey}
+\setbeamercolor{author in head/foot}{bg=white,fg=UUDarkGrey}
+\setbeamercolor{institute in head/foot}{bg=white,fg=UUDarkGrey}
+
+%Sidebar colors
+\setbeamercolor*{sidebar}{bg=UULightGrey}
+\setbeamercolor*{sidebar canvas right}{bg=UUGrey,fg=UURed}
+\setbeamercolor*{palette sidebar primary}{fg=UURed}
+\setbeamercolor*{palette sidebar secondary}{fg=UURed}
+\setbeamercolor*{palette sidebar tertiary}{fg=UURed}
+\setbeamercolor*{palette sidebar quaternary}{fg=UURed}
+\setbeamercolor*{section in sidebar}{use=sidebar,bg=white,fg=UURed}
+\setbeamercolor*{subsection in sidebar}{parent=section in sidebar}
+\setbeamercolor*{subsubsection in sidebar}{parent=subsection in sidebar}
+
+%Body and block colors
+\setbeamercolor*{block body}{bg=UUVeryLightGrey}
+\setbeamercolor*{block title}{bg=UUGrey,fg=white}
+\setbeamercolor*{block title alerted}{bg=UURed,fg=white}
+\setbeamercolor*{alerted text}{fg=UURed}
+
+%% Logo background color
+\setbeamercolor{logo}{bg=UULightGrey}
+
+%% Button color
+\setbeamercolor{button}{bg=white,fg=UULightGrey}
+\setbeamercolor{button border}{bg=UURed,fg=black}
+% the foreground of this color is used to render the border of buttons
+
+
+%% =============================================================
+\mode<presentation>
+
+%Def maximum width of the frame
+\newdimen\beamer@mydim%
+\beamer@mydim=0.985\paperwidth%
+\advance\beamer@mydim by-\beamer@sidebarwidth%
+
+%% =============================================================
+%% Redefining the head
+
+\defbeamertemplate*{headline}{uu theme}
+{%
+	\hbox{%
+		\begin{beamercolorbox}[wd=\beamer@sidebarwidth,ht=2ex]{sidebar}% 
+			%empty!
+		\end{beamercolorbox}%
+		\hspace{1pt}
+		\begin{beamercolorbox}[wd=\beamer@mydim,ht=2ex,dp=1ex]{title in head/foot}%
+			\usebeamerfont{title in head/foot}
+				\@leftHead \hfill \@rightHead%
+		\end{beamercolorbox}%
+	}%
+}
+
+
+%% =============================================================
+%% Redefining the frametitle
+
+\defbeamertemplate*{frametitle}{uu theme}
+{%
+  \nointerlineskip%
+    \vskip0.6ex%
+
+	\hskip 0.5ex%
+    \parbox[c][1em][c]{0.95\textwidth}{\linespread{0.9}\usebeamercolor[fg]{frametitle}\usebeamerfont{frametitle}\raggedright\insertframetitle}\par%  %parbox to fix text height and multirow titles
+	\vskip -0.6ex%
+	\hskip 1.5ex%
+	\parbox[b][0.51em][t]{0.85\textwidth}{\usebeamercolor[fg]{framesubtitle}\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    %% Adding the bar
+	{\usebeamercolor[bg]{titlebar} \hrule height 1pt width 0.85\paperwidth}%
+  }%
+
+
+%% =============================================================
+%% Sidebar
+
+\defbeamertemplate*{sidebar left}{uu theme}
+{%
+	  \begin{beamercolorbox}[wd=\beamer@sidebarwidth]{logo}
+	  	\usebeamercolor[bg]{logo}%
+	  	\centering
+	  	\ifnum\insertframenumber=0
+		  	\ifnum\@showLogo=1
+			  	\ifpdf
+				  	\includegraphics[width=0.95\beamer@sidebarwidth]{uu_logo.pdf}
+			  	\else
+				  	\includegraphics[width=0.95\beamer@sidebarwidth]{uu_logo.eps}
+			  	\fi
+			\else
+			\fi
+		\else
+			\ifpdf
+				\includegraphics[width=0.95\beamer@sidebarwidth]{uu_logo.pdf}
+			\else
+				\includegraphics[width=0.95\beamer@sidebarwidth]{uu_logo.eps}
+			\fi
+	  	\vskip2ex%
+	  	\fi
+	  \end{beamercolorbox}%
+}%
+
+
+%% =============================================================
+%% Redefining the footline
+
+\defbeamertemplate*{footline}{uu theme}
+{%
+  \hbox{%
+    \begin{beamercolorbox}[wd=\beamer@sidebarwidth,ht=2ex,dp=1ex]{page number in foot}% 
+    	\centering
+	    %This is the title page, display no number.
+    	\ifnum\insertframenumber=0
+    	\else
+	    	\ifx\tooManySlides\undefined
+    		\insertframenumber\,/\,\inserttotalframenumber
+    		\else
+    		\insertframenumber\,/\,$\infty$
+    		\fi
+    	\fi
+    		
+    \end{beamercolorbox}%
+    \hspace{1pt}
+    \begin{beamercolorbox}[wd=\beamer@mydim,ht=2ex,dp=1ex]{author in head/foot}%
+       	\usebeamerfont{email in head/foot}
+			\@leftFoot \hfill \@rightFoot%
+    \end{beamercolorbox}%	
+  }%
+}
