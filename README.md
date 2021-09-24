@@ -8,10 +8,11 @@ Course [homepage.](http://www.it.uu.se/research/systems_and_control/education/20
 
 ### Hand in assignment
 
-- [Hand-in assignement 1](./assignments/pdfs/assignment1.pdf)
+- [Hand-in assignment 1](./assignments/ha1-belkin/ha1-description.pdf)
+- [Hand-in assignment 2](./assignments/ha2-hastie/ha2-description.pdf)
 
 ### Slides
 
-- [Introduction](./slides/pdfs/intro.pdf)
-- [Highlights for Hastie et. al. (2020)](./slides/pdfs/intro.pdf)
+- [Introduction](./slides/intro.pdf)
+- [Highlights for Hastie et. al. (2020)](./slides/highlights-hastie.pdf)
 
