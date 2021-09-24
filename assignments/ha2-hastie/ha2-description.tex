@@ -51,14 +51,14 @@
 
 \textit{
 The items in the assignment can be implemented in the programming language of choice.
-Nonetheless, we recommend the usage of Python as a programming language, since we might include suggestions of functions in the exercise description.}
+Nonetheless, we recommend the use of Python as a programming language, since we might include suggestions of functions in the exercise description.}
 
 
 
 \section*{Double-descent in Linear Regression with Random Covariates}
 
 
-You are going to reproduce the experiment in Figure 2 from~\citep{hastie_surprises_2019}. The instructions give some extra details on how to do it. You should obtain both empirical and asymptotic results and plot them together. You will use covariates that are random and i.i.d and estimate the parameters using the minimum-norm solution.
+You are going to reproduce the experiment in Figure 2 from~\citep{hastie_surprises_2019}. The instructions give some extra details on how to do it. You should obtain both empirical and asymptotic results and plot them together. You will use random i.i.d. covariates and estimate the parameters using the minimum-norm solution.
 
 \paragraph{Data.} You will generate simulated data similar to the one described in~\citep{hastie_surprises_2019} in Section 3. The data will come from a linear model with isotropic features. 
 \begin{itemize}
@@ -122,11 +122,11 @@ You are going to reproduce the experiment in Figure 2 from~\citep{hastie_surpris
     \item \textbf{Note 1:}
     More precisely, \citet{hastie_surprises_2019} establishes that the expectation (conditioned on $\textbf{X}$) of the values on the left hand side converge, almost surely, to the values on the right hand side  under the appropriate conditions.
     \item \textbf{Note 2:}
-    You might notice some subtle differences in the formulation above from the one in~\citet{hastie_surprises_2019}. They give the asymptotics for the risk $R = E[\textbf{x}_0^\trnsp\hat{\boldsymbol{\beta}} -  \textbf{x}_0^\trnsp\boldsymbol{\beta}]$, where $\textbf{x}_0$ is a test point not seem during training. Here, we work directly with the mean square error on the test error instead.  Eq.~\ref{eq:asymptotics-hastie} above follows from the fact that $\text{MSE}_{\text{test}}\rightarrow R + \sigma^2$ as $n_{\text{test}} \rightarrow \infty$.
+    You might notice some subtle differences in the formulation above from the one in~\citet{hastie_surprises_2019}. They give the asymptotics for the risk $R = E[\textbf{x}_0^\trnsp\hat{\boldsymbol{\beta}} -  \textbf{x}_0^\trnsp\boldsymbol{\beta}]$, where $\textbf{x}_0$ is a test point not seem during training. Here, we work directly with the mean square error on the test set instead.  Eq.~\ref{eq:asymptotics-hastie} above follows from the fact that $\text{MSE}_{\text{test}}\rightarrow R + \sigma^2$ as $n_{\text{test}} \rightarrow \infty$.
     \end{itemize}
     \end{note}
 \section*{Exercise}
-Choose $\sigma^2$ and $r^2$, and  (for the values you choose) plot the \textbf{asymptotics} \textit{and, also,} the \textbf{empirical values} of
+Choose $\sigma^2$ and $r^2$, and  (for the values you have choosen) plot the \textbf{asymptotics} \textit{and, also,} the \textbf{empirical values} of
 \begin{enumerate}
     \item The \textbf{test} mean square error;
     \item  The \textbf{parameter $\ell_2$ norm} $\|\beta\|_2$.
@@ -135,7 +135,7 @@ Choose $\sigma^2$ and $r^2$, and  (for the values you choose) plot the \textbf{a
 
 For the \textbf{empirical evaluation}: fix the number of training points $n = 200$, and perform the empirical evaluation described above. Do it for the number of parameters $p$ ranging from $0.1n$ to $10 n$ (generate at least 100 configurations in this range using logspace). Plot as a function of the ratio $\gamma = p / n$.
 
-For the \textbf{asymptotics} evaluation: Compute the asymptotic values for $\gamma$ ranging from $0.1$ to $10$ (use a finer grid so it looks continuous). Plot the asymptotics superimposed to the empirical obtained values.
+For the \textbf{asymptotics} evaluation: Compute the asymptotic values for $\gamma$ ranging from $0.1$ to $10$ (use a finer grid so it looks continuous). Plot the asymptotics superimposed to the empirically obtained values.
 
    \begin{note}
     Some tips for the plots to look nice:
@@ -151,7 +151,7 @@ For the \textbf{asymptotics} evaluation: Compute the asymptotic values for $\gam
 \section*{The Submission}
 Your submission should have a single page of content (a4paper, fontsize=10pt, margin=2cm, both single and double column are acceptable...).  Include your name, the plots, a short description of the experiment parameters that you used and a paragraph of discussion/conclusion. You can assume that whoever will read your report has both read paper from~\citep{hastie_surprises_2019} and the entire description above, so there is no need for repeating it... 
 
-All requested plots should have proper figure captions, legends, and axis labels. You should submit two files, one pdf-file with the report and a standalone script (or jupyter notebook) that can be used to run the code and generate the plots (Write as comments the packages/libraries versions and additinal requirements as comments in the top of the script). Compress the two files as a single zip (containing pdf + script) and mail it to \href{mailto:antonio.horta.ribeiro@it.uu.se}{antonio.horta.ribeiro@it.uu.se}. You will receive a confirmation mail back.
+All requested plots should have proper figure captions, legends, and axis labels. You should submit two files, one pdf-file with the report and a standalone script (or jupyter notebook) that can be used to run the code and generate the plots (Write as comments the packages/libraries versions and additional requirements as comments in the top of the script). Compress the two files as a single zip (containing pdf + script) and mail it to \href{mailto:antonio.horta.ribeiro@it.uu.se}{antonio.horta.ribeiro@it.uu.se}. You will receive a confirmation mail back.
 
 % \bibliography{refs}
 \begin{thebibliography}{2}
