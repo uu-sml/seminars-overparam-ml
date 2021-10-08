@@ -1,0 +1,161 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+
+
+
+\usepackage[round]{natbib}
+\renewcommand{\bibname}{References}
+\bibliographystyle{abbrvnat}
+
+\usepackage{amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, citecolor=magenta}
+
+
+\makeatletter
+\@addtoreset{exercise}{section}
+\makeatother  
+\newcounter{exercise}
+\newtheorem{exercise}{Exercise}
+\renewcommand{\theexercise}{\arabic{exercise}}
+\newsavebox{\mybox}
+\newenvironment{note}
+{
+\begin{center}
+\begin{lrbox}{\mybox}
+\begin{minipage}{42em}}
+{\end{minipage}
+\end{lrbox}\fbox{\usebox{\mybox}}
+\end{center}}
+
+
+
+\usepackage{amsmath, amsfonts, amsthm} 
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Hil}{\mathbb{H}}
+\newcommand{\trnsp}{\mathsf{T}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\Prob}[2]{\mathsf{P}_{#1}\left[#2\right]}
+
+
+\title{Highlights: Neural Tangent Kernel}
+\author{Antônio H. Ribeiro, Dave Zachariah, Per Mattsson}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+Notes about the paper \textit{Neural Tangent Kernel: Convergence and Generalization in Neural Networks}~\citep{jacot_neural_2018}.
+
+
+\section{Setup}
+
+Let $f(\cdot; \theta): \R^d  \rightarrow \R$ be an almost everywhere diferentiable function  parametrized by $\theta\in \R^p$. Assume given a training dataset $\{(x_i, y_i)\}_{i-1}^n$ of input and outputs. We define the cost function
+\begin{equation}
+    V(\theta) = \frac{1}{2n} \sum_{i = 1}^n (f(x_i; \theta) - y_i)^2.
+\end{equation}
+Taking the derivative of $V$ we obtain,
+\begin{equation}
+    \nabla_\theta V(\theta) = \frac{1}{n} \sum_{i = 1}^n (f(x_i; \theta) - y_i) \nabla_\theta f(x_i; \theta).
+\end{equation}
+
+Now assume the parameter $\theta$ is estimated using gradient flow, let $\theta_t$ be the parameters estimated at the instant $t$. Then,
+\begin{equation}
+     \frac{d \theta_t}{d t}= - \eta \nabla_\theta V(\theta),
+\end{equation}
+and the chain rule yields
+\begin{equation}
+    \frac{d f(z, \theta_t)}{d t} = \eta \nabla_\theta V(\theta)^\trnsp \nabla_\theta f(z; \theta) =  \frac{\eta}{n} \sum_{i = 1}^n  (f(x_i; \theta) - y_i) \left( \nabla_\theta f(x_i; \theta)^\trnsp \nabla_\theta f(z; \theta)\right).
+\end{equation}
+We define the Neural Tangent Kernel, $K(\cdot, \cdot; \theta): \R^d \times \R^d  \rightarrow \R$
+\begin{equation}
+    K(x, z; \theta_t) = \nabla_\theta f(x; \theta)^\trnsp \nabla_\theta f(z; \theta).
+\end{equation}
+This is the kernel associated with the feature map $x \mapsto \nabla_\theta f(x,; \theta)$.  It then follows that
+\begin{equation}
+  \label{eq:training_ode}
+    \frac{d f(z, \theta_t)}{d t} = \frac{\eta}{n} \sum_{i = 1}^n  (f(x_i; \theta) - y_i) K(x_i, z; \theta).
+\end{equation}
+
+
+\section{Model}
+
+Here they consider $f(x; \theta) = \tilde\alpha^{(\ell)} (x, \theta)$ is the output of a neural network with $L$ layers. that could be defined recursively as:
+
+\begin{equation}
+\begin{aligned}
+\alpha^{(0)}(x ; \theta) &=x \\
+\tilde{\alpha}^{(\ell+1)}(x ; \theta) &=\frac{1}{\sqrt{n_{\ell}}} W^{(\ell)} \alpha^{(\ell)}(x ; \theta)+\beta b^{(\ell)} \\
+\alpha^{(\ell)}(x ; \theta) &=\sigma\left(\tilde{\alpha}^{(\ell)}(x ; \theta)\right)
+\end{aligned}
+\end{equation}
+where the nonlinearity $\sigma$ is applied entrywise and $\beta$ is a scaling factor. Here $\theta = ( W^{(1)},   b^{(1)},  W^{(2)},   b^{(2)}, \cdots,  W^{(L)},   b^{(L)})$. At initialization, each entry of $ W^{\ell}$  or $b^{\ell}$ is sampled from i.i.d Gausians $\mathcal{N}(0, 1)$. Hence, $\theta_0$ is a random variable. 
+
+
+
+\section{Challenges}
+
+Now there are two elements that make the model hard to deal with using traditional tools.
+\begin{enumerate}
+\item \textbf{The kernel is stochastic.} For the models studied $\theta_0$  is a random variable.
+  Hence $K(\cdot, \cdot; \theta_0)$ is  not deterministic.
+\item \textbf{The kernel is parametrized.} The kernel depends on a parameter $\theta$ that varies which is itself being updated during training.  Hence $K(\cdot, \cdot; \theta)$  is a kernel that evolves with the training. This reflects making the Eq.~\ref{eq:training_ode} not linear.
+\end{enumerate}
+
+\noindent
+\textbf{Solutions} that are proposed in the paper:
+\begin{enumerate}
+\item  (Theorem 1) In probability, $K(x, y; \theta_0) \rightarrow K_0(x, y)$, i.e. where $K_0$ is a deterministic kernel.
+\item (Theorem 2)  Uniformly on t, $K(x, y; \theta_t) \rightarrow K_0(x, y)$ for all $t \in [0, T]$.
+\end{enumerate}
+
+\section{Relation with other models}
+We have presented another linear model approximation before, the one that assumed that $\theta  = \theta_0 + \beta$ and the number of parameters is so large that training effectively only changes the parameter by a small amount. Them $\beta$ is small and:
+\begin{equation*}
+f(z; \theta) \approx  f(x; \theta_0) + \nabla_\theta f(x; \theta_0)^\trnsp\beta.
+\end{equation*}
+In the case,  $f(z; \theta_0)$ this would come down to the map: $x \mapsto  \nabla_\theta  f(x; \theta_0)$ followed by the estimation of $\beta$ using a linear parameter. Notice that this nonlinear map coincides with the nonlinear map we are considering here.
+
+
+
+
+
+\begin{thebibliography}{2}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Belkin et~al.(2019)Belkin, Hsu, Ma, and
+  Mandal]{belkin_reconciling_2019}
+M.~Belkin, D.~Hsu, S.~Ma, and S.~Mandal.
+\newblock Reconciling modern machine-learning practice and the classical
+  bias\textendash variance trade-off.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 116\penalty0
+  (32):\penalty0 15849--15854, Aug. 2019.
+\newblock ISSN 0027-8424, 1091-6490.
+\newblock \doi{10.1073/pnas.1903070116}.
+
+
+\bibitem[Jacot et~al.(2018)]{jacot_neural_2018}
+A. Jacot, F.~Gabriel, C.~Hongler.
+\newblock {{Neural}} {{Tangent}} {{Kernel}}: {{Convergence}} and {{Generalization}} in {{Neural}} {{Networks}}
+\newblock In \emph{Advances in {{Neural Information Processing Systems}} 32},
+  2018.
+
+\bibitem[Rahimi and Recht(2008)]{rahimi_random_2008}
+A.~Rahimi and B.~Recht.
+\newblock Random {{Features}} for {{Large}}-{{Scale Kernel Machines}}.
+\newblock In \emph{Advances in {{Neural Information Processing Systems}} 20},
+  pages 1177--1184. 2008.
+
+  
+\end{thebibliography}
+
+\end{document}
