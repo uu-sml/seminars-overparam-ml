@@ -16,4 +16,4 @@ Course [homepage.](http://www.it.uu.se/research/systems_and_control/education/20
 
 - [Introduction](./slides/intro.pdf)
 - [Highlights: Hastie et. al. (2020)](./slides/highlights-hastie.pdf)
-- [Highlights: Jacot et. al. (2018)](./notes/notes-ntk.pdf)
+- [Highlights: Jacot et. al. (2018)](./notes/notes_ntk.pdf)
