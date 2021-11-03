@@ -64,5 +64,4 @@ if __name__ == "__main__":
                          m + nn*np.sqrt(np.diag(cc)), color=str(0.4+0.15 * nn), alpha=0.5)
     plt.xlabel('gamma')
     plt.ylabel('f')
-    plt.savefig('gaussian_process.pdf')
     plt.show()
