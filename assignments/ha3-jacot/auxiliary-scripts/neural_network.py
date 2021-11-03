@@ -26,7 +26,7 @@ class FeedforwardNetwork(nn.Module):
             self.biases += [bi]
 
     def forward(self, X):
-        """Return output and gradient"""
+        """Return output"""
         Xf = self.get_features(X)
         pred = 1/np.sqrt(self.ws[-2]) * Xf @ self.weights[-1] + self.beta * self.biases[-1]
         return pred.flatten()
