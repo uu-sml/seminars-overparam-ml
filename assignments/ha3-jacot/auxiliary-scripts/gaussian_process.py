@@ -56,12 +56,13 @@ if __name__ == "__main__":
     m, cc = conditioning(c, Y_obs)
     normal = multivariate_normal(mean=m.flatten(), cov=cc + EPS*np.eye(cc.shape[0]))
     Y_sols = normal.rvs(5)
-    plt.plot(gamma_obs, Y_obs.T, '*', color=str(0.4), ms=10)
-    plt.plot(gamma_eval, Y_eval.T, '-', color='black', ms=10)
     plt.plot(gamma_eval, Y_sols.T, color=str(0.4), ms=10)
+    plt.plot(gamma_obs, Y_obs.T, '*', color='black', ms=10)
+    plt.plot(gamma_eval, Y_eval.T, '-', color='black', ms=10)
     for nn in [3, 2, 1]:
         plt.fill_between(gamma_eval, m - nn*np.sqrt(np.diag(cc)),
                          m + nn*np.sqrt(np.diag(cc)), color=str(0.4+0.15 * nn), alpha=0.5)
     plt.xlabel('gamma')
     plt.ylabel('f')
+    plt.savefig('gaussian_process.pdf')
     plt.show()

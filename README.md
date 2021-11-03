@@ -12,6 +12,7 @@ Course [homepage.](http://www.it.uu.se/research/systems_and_control/education/20
   - [Solution](./assignments/ha1-belkin/ha1-solution.py)
 - [Hand-in assignment 2](./assignments/ha2-hastie/ha2-description.pdf)
   - [Solution](./assignments/ha2-belkin/ha2-solution.py)
+- [Hand-in assignment 3](./assignments/ha3-jacot/ha3-description.pdf)
   
 
 ### Material
